@@ -5,6 +5,7 @@ module.exports = {
   testEnvironment: 'node',
   transform: { '^.+\\.js$': 'babel-jest' },
   testPathIgnorePatterns: ['/node_modules/'],
+  setupFiles: ['<rootDir>/tests/setup/env.js'],
   clearMocks: true,
   moduleNameMapper: {
     '^#config/(.*)$': '<rootDir>/src/config/$1',

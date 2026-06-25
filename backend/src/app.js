@@ -9,6 +9,7 @@ import { apiLimiter } from '#middlewares/rateLimiter.js'
 import { notFound } from '#middlewares/notFound.js'
 import { errorHandler } from '#middlewares/errorHandler.js'
 import { ApiResponse } from '#utils/ApiResponse.js'
+import authRouter from '#modules/auth/auth.routes.js'
 
 export const app = express()
 
@@ -38,14 +39,16 @@ app.use(apiLimiter)
 //    form posts, and file uploads go straight to Cloudinary, not through us.
 app.use(express.json({ limit: '10kb' }))
 
-// 7. Reads the httpOnly refresh-token cookie set during login (auth phase).
+// 7. Reads the httpOnly refresh-token cookie set during login/refresh.
 app.use(cookieParser())
 
 app.get('/health', (req, res) => {
   ApiResponse.send(res, 200, { status: 'ok', uptime: process.uptime() })
 })
 
-// Future: app.use('/api/v1/auth', authRouter), etc.
+app.use('/api/v1/auth', authRouter)
+
+// Future: app.use('/api/v1/listings', ...), etc.
 
 // 8. No route matched.
 app.use(notFound)

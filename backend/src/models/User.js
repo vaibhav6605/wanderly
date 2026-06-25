@@ -58,6 +58,14 @@ const userSchema = new Schema(
       default: [],
     },
     stripeCustomerId: { type: String, select: false, default: null },
+
+    // Hashes of one-time tokens mailed to the user — never the raw token,
+    // same reasoning as password/refreshTokens: a DB leak alone must not
+    // be enough to take over an account or forge a "verified" state.
+    emailVerificationTokenHash: { type: String, select: false, default: null },
+    emailVerificationExpires: { type: Date, select: false, default: null },
+    passwordResetTokenHash: { type: String, select: false, default: null },
+    passwordResetExpires: { type: Date, select: false, default: null },
   },
   { timestamps: true, versionKey: false },
 )

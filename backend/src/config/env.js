@@ -25,12 +25,48 @@ export const env = {
     windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
     max: Number(process.env.RATE_LIMIT_MAX) || 100,
   },
+
+  // Separate, tighter limits for the brute-force/abuse-prone auth endpoints.
+  // Configurable (not hardcoded in auth.routes.js) so a test run can raise
+  // the ceiling without weakening the real production default.
+  authRateLimit: {
+    windowMs: Number(process.env.AUTH_RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+    max: Number(process.env.AUTH_RATE_LIMIT_MAX) || 10,
+  },
+  refreshRateLimit: {
+    windowMs: Number(process.env.REFRESH_RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
+    max: Number(process.env.REFRESH_RATE_LIMIT_MAX) || 30,
+  },
+
+  jwt: {
+    accessSecret: process.env.JWT_ACCESS_SECRET,
+    refreshSecret: process.env.JWT_REFRESH_SECRET,
+    // Short-lived on purpose — a leaked access token is only useful for
+    // this long. Anything longer-lived is the refresh token's job, which
+    // is revocable; this isn't.
+    accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '15m',
+    refreshExpiresDays: Number(process.env.JWT_REFRESH_EXPIRES_DAYS) || 30,
+    get refreshExpiresIn() {
+      return `${this.refreshExpiresDays}d`
+    },
+    get refreshExpiresMs() {
+      return this.refreshExpiresDays * 24 * 60 * 60 * 1000
+    },
+  },
+
+  smtp: {
+    host: process.env.SMTP_HOST || null,
+    port: Number(process.env.SMTP_PORT) || 587,
+    user: process.env.SMTP_USER || null,
+    pass: process.env.SMTP_PASS || null,
+    from: process.env.EMAIL_FROM || 'Wanderly <no-reply@wanderly.test>',
+  },
 }
 
 // Called by server.js before connecting to the DB — kept out of app.js so
 // importing the Express app in tests never requires a live Mongo URI.
 export function assertRequiredEnv() {
-  const required = ['MONGO_URI']
+  const required = ['MONGO_URI', 'JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET']
   const missing = required.filter((key) => !process.env[key])
   if (missing.length > 0) {
     throw new Error(`Missing required environment variable(s): ${missing.join(', ')}`)
