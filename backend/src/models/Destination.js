@@ -12,8 +12,12 @@ const destinationSchema = new Schema(
       url: { type: String, default: null },
       publicId: { type: String, default: null },
     },
+    // No default on `type` — a Destination without coordinates yet must
+    // have no `location` field at all, not a partial { type: 'Point' }
+    // with no coordinates. MongoDB's 2dsphere index rejects the latter as
+    // invalid GeoJSON (it's fine with the field being entirely absent).
     location: {
-      type: { type: String, enum: ['Point'], default: 'Point' },
+      type: { type: String, enum: ['Point'] },
       coordinates: {
         type: [Number], // [longitude, latitude]
         validate: {
@@ -27,6 +31,12 @@ const destinationSchema = new Schema(
   },
   { timestamps: true, versionKey: false },
 )
+
+destinationSchema.pre('validate', function setGeoType() {
+  if (this.location?.coordinates?.length === 2) {
+    this.location.type = 'Point'
+  }
+})
 
 destinationSchema.index({ location: '2dsphere' })
 destinationSchema.index({ name: 'text', country: 'text' })

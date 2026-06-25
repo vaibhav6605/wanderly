@@ -99,6 +99,24 @@ describe('Tour', () => {
   })
 })
 
+describe('Destination', () => {
+  it('leaves location.type unset when no coordinates are given', async () => {
+    const destination = new Destination({ name: 'Bali', country: 'Indonesia' })
+    await destination.validate()
+    expect(destination.location.type).toBeUndefined()
+  })
+
+  it('sets location.type to Point once valid coordinates are given', async () => {
+    const destination = new Destination({
+      name: 'Bali',
+      country: 'Indonesia',
+      location: { coordinates: [115.19, -8.41] },
+    })
+    await destination.validate()
+    expect(destination.location.type).toBe('Point')
+  })
+})
+
 describe('Coupon', () => {
   it('rejects a percentage discount over 100', async () => {
     const coupon = new Coupon({
