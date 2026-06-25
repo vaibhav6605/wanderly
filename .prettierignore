@@ -1,0 +1,8 @@
+node_modules
+dist
+build
+coverage
+.vercel
+.railway
+*.lock
+package-lock.json

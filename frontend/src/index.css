@@ -1,0 +1,22 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens live here (Tailwind v4 CSS-first config).
+ * Reference in classes as e.g. bg-brand-500, text-ink.
+ */
+@theme {
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-500: #ff5a5f;
+  --color-brand-600: #e0484d;
+  --color-brand-700: #c93a3f;
+
+  --color-ink: #222222;
+  --color-muted: #717171;
+
+  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  @apply text-ink antialiased;
+}

@@ -1,0 +1,48 @@
+{
+  "name": "wanderly",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wanderly — full-stack travel booking platform",
+  "scripts": {
+    "dev": "concurrently -n CLIENT,SERVER -c blue,green \"npm:dev:client\" \"npm:dev:server\"",
+    "dev:client": "npm --prefix frontend run dev",
+    "dev:server": "npm --prefix backend run dev",
+    "lint": "npm --prefix frontend run lint && npm --prefix backend run lint",
+    "format": "prettier --write .",
+    "test:server": "npm --prefix backend test",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vaibhav6605/wanderly.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vaibhav6605/wanderly/issues"
+  },
+  "homepage": "https://github.com/vaibhav6605/wanderly#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^21.1.0",
+    "@commitlint/config-conventional": "^21.1.0",
+    "concurrently": "^10.0.3",
+    "eslint": "^9.39.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
+    "prettier": "^3.8.4"
+  },
+  "lint-staged": {
+    "frontend/**/*.{js,jsx}": [
+      "eslint --fix --config frontend/eslint.config.js",
+      "prettier --write"
+    ],
+    "backend/**/*.js": [
+      "eslint --fix --config backend/eslint.config.js",
+      "prettier --write"
+    ],
+    "**/*.{json,md,css}": [
+      "prettier --write"
+    ]
+  }
+}
