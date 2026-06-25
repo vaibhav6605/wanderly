@@ -10,6 +10,7 @@ import { notFound } from '#middlewares/notFound.js'
 import { errorHandler } from '#middlewares/errorHandler.js'
 import { ApiResponse } from '#utils/ApiResponse.js'
 import authRouter from '#modules/auth/auth.routes.js'
+import usersRouter from '#modules/users/users.routes.js'
 
 export const app = express()
 
@@ -47,8 +48,9 @@ app.get('/health', (req, res) => {
 })
 
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/users', usersRouter)
 
-// Future: app.use('/api/v1/listings', ...), etc.
+// Future: app.use('/api/v1/tours', ...), etc.
 
 // 8. No route matched.
 app.use(notFound)

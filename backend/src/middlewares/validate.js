@@ -22,8 +22,17 @@ export function validate(schema) {
     }
 
     if (result.data.body !== undefined) req.body = result.data.body
-    if (result.data.query !== undefined) req.query = result.data.query
     if (result.data.params !== undefined) req.params = result.data.params
+    if (result.data.query !== undefined) {
+      // Express 5 made req.query a getter computed from the configured
+      // query-string parser — a plain `req.query = ...` throws ("only has
+      // a getter"). Redefining the property is the documented workaround.
+      Object.defineProperty(req, 'query', {
+        value: result.data.query,
+        writable: true,
+        configurable: true,
+      })
+    }
 
     next()
   }

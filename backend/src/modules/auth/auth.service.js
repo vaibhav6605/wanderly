@@ -6,24 +6,10 @@ import { signAccessToken, signRefreshToken, verifyRefreshToken } from '#utils/jw
 import { sendEmail } from '#config/mailer.js'
 import { logger } from '#config/logger.js'
 import { env } from '#config/env.js'
+import { sanitizeUser } from '#utils/sanitizeUser.js'
 
 const EMAIL_VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000
 const PASSWORD_RESET_TTL_MS = 30 * 60 * 1000
-
-// select:false hides these from query *results*, not from an in-memory
-// document we already hold (e.g. one we just pushed a refresh token onto).
-// Strip them explicitly before anything goes back to a client.
-function toSafeUser(user) {
-  const obj = user.toObject()
-  delete obj.password
-  delete obj.refreshTokens
-  delete obj.emailVerificationTokenHash
-  delete obj.emailVerificationExpires
-  delete obj.passwordResetTokenHash
-  delete obj.passwordResetExpires
-  delete obj.stripeCustomerId
-  return obj
-}
 
 async function issueTokenPair(user, deviceInfo) {
   const accessToken = signAccessToken({ sub: user._id.toString(), role: user.role })
@@ -86,7 +72,7 @@ export async function registerUser({ name, email, password, deviceInfo }) {
 
   await sendEmailSafely({ to: user.email, ...buildVerificationEmail(rawToken) })
 
-  return { user: toSafeUser(user), accessToken, refreshToken }
+  return { user: sanitizeUser(user), accessToken, refreshToken }
 }
 
 export async function loginUser({ email, password, deviceInfo }) {
@@ -104,7 +90,7 @@ export async function loginUser({ email, password, deviceInfo }) {
   }
 
   const { accessToken, refreshToken } = await issueTokenPair(user, deviceInfo)
-  return { user: toSafeUser(user), accessToken, refreshToken }
+  return { user: sanitizeUser(user), accessToken, refreshToken }
 }
 
 export async function refreshTokens({ refreshToken, deviceInfo }) {
@@ -167,7 +153,7 @@ export async function getCurrentUser(userId) {
   if (!user) {
     throw ApiError.notFound('User not found')
   }
-  return toSafeUser(user)
+  return sanitizeUser(user)
 }
 
 export async function verifyEmail({ token }) {
