@@ -4,6 +4,7 @@
   "description": "Wanderly API",
   "main": "server.js",
   "type": "module",
+  "engines": {"node": ">=22.0.0"},
   "imports": {
     "#config/*": "./src/config/*",
     "#modules/*": "./src/modules/*",
