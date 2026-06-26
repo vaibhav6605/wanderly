@@ -20,7 +20,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "test": "cross-env NODE_ENV=test jest --runInBand"
+    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "seed": "node scripts/seed.js",
+    "seed:force": "node scripts/seed.js --force"
   },
   "keywords": [],
   "author": "",
