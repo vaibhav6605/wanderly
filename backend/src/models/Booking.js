@@ -29,8 +29,10 @@ const bookingSchema = new Schema(
     travelerDetails: { type: [travelerSchema], default: [] },
     // Snapshotted at booking time — never recompute from the tour's
     // current price; prices change, past invoices must not.
-    totalAmount: { type: Number, required: true, min: 0 },
-    discountAmount: { type: Number, default: 0, min: 0 },
+    baseAmount: { type: Number, required: true, min: 0 },   // price × totalTravelers
+    discountAmount: { type: Number, default: 0, min: 0 },   // coupon discount
+    taxAmount: { type: Number, default: 0, min: 0 },        // tax on (base − discount)
+    totalAmount: { type: Number, required: true, min: 0 },  // base − discount + tax
     currency: { type: String, required: true },
     coupon: { type: Schema.Types.ObjectId, ref: 'Coupon', default: null },
     status: {

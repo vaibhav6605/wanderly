@@ -10,3 +10,7 @@ process.env.JWT_REFRESH_SECRET ||= 'test-refresh-secret'
 // assertions — raise it here rather than weakening the real default.
 process.env.AUTH_RATE_LIMIT_MAX ||= '1000'
 process.env.REFRESH_RATE_LIMIT_MAX ||= '1000'
+
+// Payments tests mock Stripe but still need a non-empty key so getStripe()
+// passes the "is Stripe configured?" guard before handing off to the mock.
+process.env.STRIPE_SECRET_KEY ||= 'sk_test_fake_key_for_tests'

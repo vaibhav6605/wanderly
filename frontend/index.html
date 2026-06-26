@@ -4,7 +4,18 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>Wanderly — Discover Extraordinary Adventures</title>
+    <meta name="description" content="Book handpicked tours around the world. Beach, mountains, culture, wildlife and more." />
+    <meta name="theme-color" content="#ff5a5f" />
+    <script>
+      // Apply saved dark mode before first paint to avoid flash
+      try {
+        const t = localStorage.getItem('wanderly-theme');
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch(e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

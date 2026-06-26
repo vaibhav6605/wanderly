@@ -1,17 +1,34 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
+import Navbar from './Navbar'
+import Footer from './Footer'
+
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.22, ease: [0.25, 0.1, 0.25, 1] } },
+  exit:    { opacity: 0, transition: { duration: 0.14 } },
+}
 
 export default function AppLayout() {
+  const location = useLocation()
+
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-b border-gray-200 px-6 py-4">
-        <span className="text-xl font-semibold text-brand-600">Wanderly</span>
-      </header>
+    <div className="flex min-h-screen flex-col bg-white dark:bg-[#0a0a0a] text-ink dark:text-gray-50">
+      <Navbar />
       <main className="flex-1">
-        <Outlet />
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={location.pathname}
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
       </main>
-      <footer className="border-t border-gray-200 px-6 py-4 text-sm text-muted">
-        &copy; {new Date().getFullYear()} Wanderly
-      </footer>
+      <Footer />
     </div>
   )
 }

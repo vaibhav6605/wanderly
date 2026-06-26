@@ -61,6 +61,19 @@ export const env = {
     pass: process.env.SMTP_PASS || null,
     from: process.env.EMAIL_FROM || 'Wanderly <no-reply@wanderly.test>',
   },
+
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME ?? null,
+    apiKey: process.env.CLOUDINARY_API_KEY ?? null,
+    apiSecret: process.env.CLOUDINARY_API_SECRET ?? null,
+  },
+
+  stripe: {
+    secretKey: process.env.STRIPE_SECRET_KEY ?? null,
+    // Signing secret from the Stripe dashboard webhook endpoint — used to
+    // verify that webhook events actually came from Stripe, not a spoof.
+    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? null,
+  },
 }
 
 // Called by server.js before connecting to the DB — kept out of app.js so
